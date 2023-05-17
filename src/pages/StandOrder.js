@@ -10,22 +10,25 @@ export default function StandOrder() {
     const pan = useState(new Animated.ValueXY())[0];
 
     const panResponder = PanResponder.create({
-        // onStartShouldSetPanResponder: () => true,
-        // onPanResponderMove: Animated.event(
-        //     [
-        //         null,
-        //         { dx: pan.x, dy: pan.y },
-        //     ],
-        //     { useNativeDriver: false }
-        // ),
-        // onPanResponderRelease: (e, gesture) => {
-        //     const newPosition = {
-        //         x: position.x + gesture.dx,
-        //         y: position.y + gesture.dy,
-        //     };
-        //     setPosition(newPosition);
-        //     pan.setValue({ x: position.x , y: position.y });
-        // },
+        onStartShouldSetPanResponder: () => true,
+        onPanResponderMove: Animated.event(
+            [
+                null,
+                { dx: pan.x, dy: pan.y },
+            ],
+            { useNativeDriver: false }
+        ),
+        onPanResponderRelease: (e, gesture) => {
+            console.log(gesture);
+            const newPosition = {
+                x: position.x + gesture.dx,
+                // x: position.x,
+                // y: position.y,
+                y: position.y + gesture.dy,
+            };
+            setPosition(newPosition);
+            pan.setValue({ x: gesture.dx, y: gesture.dy });
+        },
         // onStartShouldSetPanResponder: () => true,
         // onPanResponderMove: (e, gesture) => {
         //     let newX = position.x + gesture.dx;
