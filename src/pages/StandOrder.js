@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, PanResponder, Animated, StyleSheet, LayoutAnimation } from 'react-native';
+import { View, PanResponder, Animated, StyleSheet, LayoutAnimation, Text } from 'react-native';
 
 
 export default function StandOrder() {
@@ -64,10 +64,13 @@ export default function StandOrder() {
 
     return (
         <View style={styles.container}>
+
             <Animated.View
                 style={[styles.draggableBox, animatedStyle]}
                 {...panResponder.panHandlers}
-            />
+            >
+                <Text>Stand 1</Text>
+            </Animated.View>
         </View>
     );
 };
