@@ -1,0 +1,1 @@
+export const Security = "https://www.centralfile-sisadcloud.com:11446/api/";
