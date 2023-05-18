@@ -53,7 +53,7 @@ export default function SignUp() {
         password: passwordUser,
       };
       axios({
-        url: `${Security}Usuario/Autenticar`,
+        url: `${Security}user/login`,
         method: "POST",
         data: sesionStart,
         headers: {
