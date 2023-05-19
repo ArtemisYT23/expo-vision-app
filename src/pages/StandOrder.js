@@ -94,7 +94,11 @@ export default function StandOrder() {
             name: nameStand,
             x: 0,
             y: 0,
+            large: parseInt(large),
+            high: parseInt(high)
+
         }
+        // console.log(obj);
         elements.push(obj);
         setModalVisible(false);
         setNameStand(null);
@@ -127,9 +131,9 @@ export default function StandOrder() {
                         <SafeAreaView>
                             <TextInput
                                 style={modalStyle.input}
-                                onChangeText={value => setLarge(value)}
-                                value={large}
-                                placeholder="Largo M2"
+                                onChangeText={value => setHigh(value)}
+                                value={high}
+                                placeholder="Ancho M2"
                                 keyboardType="numeric"
                             />
                         </SafeAreaView>
@@ -137,9 +141,9 @@ export default function StandOrder() {
                         <SafeAreaView>
                             <TextInput
                                 style={modalStyle.input}
-                                onChangeText={value => setHigh(value)}
-                                value={high}
-                                placeholder="Ancho M2"
+                                onChangeText={value => setLarge(value)}
+                                value={large}
+                                placeholder="Largo M2"
                                 keyboardType="numeric"
                             />
                         </SafeAreaView>
@@ -181,11 +185,10 @@ export default function StandOrder() {
                                     position: 'absolute',
                                     left: element.x,
                                     top: element.y,
-                                    width: 100,
-                                    height: 100,
+                                    width: element.high,
+                                    height: element.large,
                                     borderColor: '#f68a20',
                                     borderWidth: 1,
-                                    borderRadius: 13,
                                     justifyContent: 'center',
                                     alignItems: 'center',
                                 }}

@@ -3,6 +3,7 @@ const initialState = {
         {
             id: '20ecc747-711f-4e39-896e-e856337ae678',
             name: 'Zone',
+            numeroFeria: 111,
             broad: 22,
             height: 11
         }

@@ -34,6 +34,7 @@ export default function StandList() {
 
         const obj = {
             id: uuid.v4(),
+            numeroFeria: 1111,
             name: nameZone,
             broad: broad,
             height: height
@@ -132,6 +133,8 @@ export default function StandList() {
             <View style={styled.containerDimension}>
                 <DataTable style={styled.container}>
                     <DataTable.Header style={styled.tableHeader}>
+
+                        <DataTable.Title>N Feria</DataTable.Title>
                         <DataTable.Title>Name</DataTable.Title>
                         <DataTable.Title>Broad Food</DataTable.Title>
                         <DataTable.Title>Height</DataTable.Title>
@@ -140,6 +143,8 @@ export default function StandList() {
                     {ZoneStand ? (
                         ZoneStand.map((item, i) => (
                             <DataTable.Row>
+
+                                <DataTable.Cell>{item.numeroFeria}</DataTable.Cell>
                                 <DataTable.Cell>{item.name}</DataTable.Cell>
                                 <DataTable.Cell>{item.broad}</DataTable.Cell>
                                 <DataTable.Cell>{item.height}</DataTable.Cell>
