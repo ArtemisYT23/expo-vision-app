@@ -48,34 +48,35 @@ export default function SignUp() {
 
   const handleSubmit = () => {
     if (emailUser != null && passwordUser != null) {
-      const sesionStart = {
-        userName: emailUser,
-        password: passwordUser,
-      };
-      axios({
-        url: `${Security}user/login`,
-        method: "POST",
-        data: sesionStart,
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-        },
-      })
-        .then(function (response) {
-          console.log(response);
-          if (response.status == 200) {
-            dispatch(getUserTockenSesion(response.data.token));
-            navigation.navigate(PublicRoute.menuOptions);
-          }
-        })
-        .catch(function (error) {
-          scheduleNotification()
-        });
-    } else {
-      scheduleNotificationEmpty()
+      navigation.navigate(PublicRoute.menuOptions);
+      //   const sesionStart = {
+      //     userName: emailUser,
+      //     password: passwordUser,
+      //   };
+      //   axios({
+      //     url: `${Security}user/login`,
+      //     method: "POST",
+      //     data: sesionStart,
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //       "Access-Control-Allow-Origin": "*",
+      //     },
+      //   })
+      //     .then(function (response) {
+      //       console.log(response);
+      //       if (response.status == 200) {
+      //         dispatch(getUserTockenSesion(response.data.token));
+      //         navigation.navigate(PublicRoute.menuOptions);
+      //       }
+      //     })
+      //     .catch(function (error) {
+      //       scheduleNotification()
+      //     });
+      // } else {
+      //   scheduleNotificationEmpty()
+      // }
     }
-
-  }
+  };
 
   return (
     <TouchableOpacity style={styles.container}>

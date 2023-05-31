@@ -14,8 +14,11 @@ export default function StandOrder() {
     const [disabled, setDisabled] = useState(true);
     const [elements, setElements] = useState([]);
     const [nameStand, setNameStand] = useState(null);
-    const [large, setLarge] = useState(0);
     const [high, setHigh] = useState(0);
+    const [large, setLarge] = useState(0);
+    const [errorMessage, setErrorMessage] = useState(null);
+    const panResponders = {};
+
 
     useEffect(() => {
         if (nameStand != "" && large != 0 && high != 0) {
@@ -36,16 +39,33 @@ export default function StandOrder() {
                     const newX = element.x + gestureState.dx;
                     const newY = element.y + gestureState.dy;
 
+                    // Verificar límites del contenedor
+                    const containerWidth = 390;
+                    const containerHeight = 670;
+                    const elementWidth = element.high; // Define el ancho del elemento
+                    const elementHeight = element.large; // Define la altura del elemento
+
+                    const minX = 0;
+                    const minY = 0;
+                    const maxX = containerWidth - elementWidth;
+                    const maxY = containerHeight - elementHeight;
+
+                    // Limitar la posición del elemento dentro del contenedor
+                    const clampedX = Math.min(Math.max(newX, minX), maxX);
+                    const clampedY = Math.min(Math.max(newY, minY), maxY);
+
                     // Verificar colisiones con otros elementos
                     const isColliding = prevElements.some(
-                        otherElement => otherElement.id !== elementId && isCollidingWithElement(newX, newY, otherElement)
+                        otherElement =>
+                            otherElement.id !== elementId &&
+                            isCollidingWithElement(clampedX, clampedY, otherElement, elementWidth, elementHeight)
                     );
 
                     if (!isColliding) {
                         return {
                             ...element,
-                            x: newX,
-                            y: newY,
+                            x: clampedX,
+                            y: clampedY,
                         };
                     }
                 }
@@ -56,9 +76,9 @@ export default function StandOrder() {
         });
     };
 
-    const isCollidingWithElement = (x, y, element) => {
-        const elementWidth = 100; // Ancho del elemento
-        const elementHeight = 100; // Alto del elemento
+    const isCollidingWithElement = (x, y, element, Width, Height) => {
+        const elementWidth = Width; // Ancho del elemento
+        const elementHeight = Height; // Alto del elemento
 
         const elementRight = element.x + elementWidth;
         const elementBottom = element.y + elementHeight;
@@ -72,15 +92,18 @@ export default function StandOrder() {
             newElementRight > element.x &&
             y < elementBottom &&
             newElementBottom > element.y
-        );
+        ) || (
+                x === element.x &&
+                y === elementBottom
+            );
     };
-
-    const panResponders = {};
 
     elements.forEach(element => {
         panResponders[element.id] = PanResponder.create({
             onStartShouldSetPanResponder: () => true,
-            onPanResponderMove: (e, gestureState) => handlePanResponderMove(element.id, gestureState),
+            onPanResponderMove: (e, gestureState) =>
+                handlePanResponderMove(element.id, gestureState)
+
         });
     });
 
@@ -88,23 +111,81 @@ export default function StandOrder() {
         setModalVisible(bool);
     }
 
-    const handleSubmit = () => {
-        const obj = {
-            id: uuid.v4(),
-            name: nameStand,
-            x: 0,
-            y: 0,
-            large: parseInt(large),
-            high: parseInt(high)
+    //validacion ancho
+    const handleChangeHigh = (value) => {
+        const numberValue = parseFloat(value);
 
+        // Limitar el número máximo con el definido
+        if (numberValue > ZoneSelected?.broad) {
+            setHigh(0); // Establecer un valor máximo de la zona stand
+            setErrorMessage("Valor excede el espacio designado")
+        } else {
+            setHigh(value);
+            setErrorMessage(null);
         }
-        // console.log(obj);
-        elements.push(obj);
-        setModalVisible(false);
-        setNameStand(null);
-        setLarge(0);
-        setHigh(0);
     }
+
+    //validacion alto
+    const handleChangeLarge = (value) => {
+        const numberValue = parseFloat(value);
+
+        // Limitar el número máximo con el definido
+        if (numberValue > ZoneSelected?.height) {
+            setLarge(1); // Establecer un valor máximo de la zona stand
+            setErrorMessage("Valor excede el espacio designado")
+        } else {
+            setLarge(value);
+            setErrorMessage(null);
+        }
+    }
+
+    const handleSubmit = () => {
+
+        const newX = Math.floor(Math.random() * ZoneSelected?.broad);
+        const newY = Math.floor(Math.random() * ZoneSelected?.height);
+
+        // Verificar límites del contenedor
+        const containerWidth = 390;
+        const containerHeight = 670;
+        const elementWidth = parseInt(high); // Define el ancho del elemento
+        const elementHeight = parseInt(large); // Define la altura del elemento
+
+        const minX = 0;
+        const minY = 0;
+        const maxX = containerWidth - elementWidth;
+        const maxY = containerHeight - elementHeight;
+
+        // Limitar la posición del elemento dentro del contenedor
+        const clampedX = Math.min(Math.max(newX, minX), maxX);
+        const clampedY = Math.min(Math.max(newY, minY), maxY);
+
+        // Verificar colisiones con otros elementos
+        const isColliding = elements.some((otherElement) =>
+            isCollidingWithElement(clampedX, clampedY, otherElement, elementWidth, elementHeight)
+        );
+
+
+        if (!isColliding) {
+            const newObj = {
+                id: uuid.v4(),
+                name: nameStand,
+                x: clampedX,
+                y: clampedY,
+                large: parseInt(large),
+                high: parseInt(high),
+            };
+            setElements((prevObjects) => [...prevObjects, newObj]);
+            setModalVisible(false);
+            setNameStand(null);
+            setLarge(0);
+            setHigh(0);
+            setErrorMessage(null);
+        } else {
+            // el nuevo elemento se superpone o colisiona con otros elementos existentes
+            setErrorMessage("El Valor del elemento colisiona con otros existentes")
+        }
+
+    };
 
     return (
         <View style={styled.content}>
@@ -131,22 +212,32 @@ export default function StandOrder() {
                         <SafeAreaView>
                             <TextInput
                                 style={modalStyle.input}
-                                onChangeText={value => setHigh(value)}
+                                onChangeText={value => handleChangeHigh(value)}
                                 value={high}
-                                placeholder="Ancho M2"
+                                placeholder={`Ancho max(${ZoneSelected?.broad})`}
                                 keyboardType="numeric"
                             />
+                            {errorMessage != null && high == 0 ? (
+                                <Text style={{ textAlign: 'center', fontSize: 12, color: 'red' }}>{errorMessage}</Text>
+                            ) : <></>}
                         </SafeAreaView>
 
                         <SafeAreaView>
                             <TextInput
                                 style={modalStyle.input}
-                                onChangeText={value => setLarge(value)}
+                                onChangeText={value => handleChangeLarge(value)}
                                 value={large}
-                                placeholder="Largo M2"
+                                placeholder={`Largo max(${ZoneSelected?.height})`}
                                 keyboardType="numeric"
                             />
+                            {errorMessage != null && large == 1 ? (
+                                <Text style={{ textAlign: 'center', fontSize: 12, color: 'red' }}>{errorMessage}</Text>
+                            ) : <></>}
                         </SafeAreaView>
+
+                        {errorMessage != null ? (
+                            <Text style={{ textAlign: 'center', fontSize: 12, color: 'red' }}>{errorMessage}</Text>
+                        ) : <></>}
 
                         <Pressable
                             disabled={disabled}
@@ -190,7 +281,7 @@ export default function StandOrder() {
                                     borderColor: '#f68a20',
                                     borderWidth: 1,
                                     justifyContent: 'center',
-                                    alignItems: 'center',
+                                    alignItems: 'center'
                                 }}
                                 {...panResponders[element.id]?.panHandlers}
                             >

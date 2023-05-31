@@ -52,7 +52,7 @@ export const modalStyle = StyleSheet.create({
     },
     modalView: {
         width: 320,
-        height: 400,
+        height: 430,
         margin: 20,
         backgroundColor: 'white',
         borderRadius: 20,

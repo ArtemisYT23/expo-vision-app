@@ -135,9 +135,9 @@ export default function StandList() {
                     <DataTable.Header style={styled.tableHeader}>
 
                         <DataTable.Title>N Feria</DataTable.Title>
-                        <DataTable.Title>Name</DataTable.Title>
-                        <DataTable.Title>Broad Food</DataTable.Title>
-                        <DataTable.Title>Height</DataTable.Title>
+                        <DataTable.Title>Nombre</DataTable.Title>
+                        <DataTable.Title>Largo</DataTable.Title>
+                        <DataTable.Title>Ancho</DataTable.Title>
                         <DataTable.Title>Order</DataTable.Title>
                     </DataTable.Header>
                     {ZoneStand ? (
