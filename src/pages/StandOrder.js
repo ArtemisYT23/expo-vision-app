@@ -57,8 +57,8 @@ export default function StandOrder() {
                     // Verificar colisiones con otros elementos
                     const isColliding = prevElements.some(
                         otherElement =>
-                            otherElement.id !== elementId &&
-                            isCollidingWithElement(clampedX, clampedY, otherElement, elementWidth, elementHeight)
+                        otherElement.id !== elementId &&
+                        isCollidingWithElement(clampedX, clampedY, otherElement, elementWidth, elementHeight)
                     );
 
                     if (!isColliding) {
@@ -77,8 +77,9 @@ export default function StandOrder() {
     };
 
     const isCollidingWithElement = (x, y, element, Width, Height) => {
-        const elementWidth = Width; // Ancho del elemento
-        const elementHeight = Height; // Alto del elemento
+
+        const elementWidth = element?.high; // Ancho del elemento
+        const elementHeight = element?.large; // Alto del elemento
 
         const elementRight = element.x + elementWidth;
         const elementBottom = element.y + elementHeight;
@@ -92,9 +93,9 @@ export default function StandOrder() {
             newElementRight > element.x &&
             y < elementBottom &&
             newElementBottom > element.y
-        ) || (
-                x === element.x &&
-                y === elementBottom
+        ) && (
+                !(x >= elementRight && y >= elementBottom) &&
+                !(newElementRight <= element.x && newElementBottom <= element.y)
             );
     };
 

@@ -16,6 +16,7 @@ export default function App() {
     <Provider store={store()}>
       <NavigationContainer>
         <Stack.Navigator initialRouteName={PublicRoute.login}>
+           
           <Stack.Screen name={PublicRoute.login} component={LoginScreen} />
 
           <Stack.Screen name={PublicRoute.scanQr} component={ScanQr} />
